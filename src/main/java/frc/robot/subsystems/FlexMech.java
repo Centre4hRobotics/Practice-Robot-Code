@@ -23,7 +23,8 @@ public class FlexMech extends SubsystemBase{
 
         for(int i = 0; i<motorIDs.length; i++) {
             switch (motorTypes[i]) {
-                case SPARK:
+                case VORTEX:
+                case NEO:
                     motorList.add(new Spark(motorIDs[i]));
                     break;
                 case KRAKEN:
@@ -81,9 +82,12 @@ public class FlexMech extends SubsystemBase{
                 case KRAKEN:
                     motorList.get(id).set(angularVelocity.in(RevolutionsPerSecond)/100); //100 is for the free speed of the kraken, idk whats going on rn weird stuff, best current fix
                     break;
-                case SPARK:
+                case NEO:
+                    motorList.get(id).set(angularVelocity.in(RevolutionsPerSecond)/94.6); //same here
+                    break;
+                case VORTEX:
                 default:
-                    motorList.get(id).set(angularVelocity.in(RevolutionsPerSecond)/94.6); //same here but w/ neos vortexes are supposedly faster but without knowing which is on there i cant account for it (i.e. i dont want to fix the enum rn)
+                    motorList.get(id).set(angularVelocity.in(RevolutionsPerSecond)/113.1); //same here
                     break;
             }
         }
@@ -113,7 +117,8 @@ public class FlexMech extends SubsystemBase{
         public void setMotorType(MotorType motorType) {
             _motorType = motorType;
             switch(_motorType) {
-                case SPARK:
+                case VORTEX:
+                case NEO:
                     m_pwm.setBoundsMicroseconds(2003, 1550, 1500, 1460, 999);
                     break;
                 case KRAKEN:
@@ -129,6 +134,6 @@ public class FlexMech extends SubsystemBase{
 
     }
 
-    public enum MotorType {SPARK, KRAKEN}
+    public enum MotorType {NEO, VORTEX, KRAKEN}
 
 }
