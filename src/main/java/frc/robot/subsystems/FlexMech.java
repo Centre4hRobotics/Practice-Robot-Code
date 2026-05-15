@@ -4,6 +4,9 @@ import static edu.wpi.first.units.Units.RevolutionsPerSecond;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Num;
+import edu.wpi.first.math.controller.LinearQuadraticRegulator;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
@@ -17,6 +20,8 @@ public class FlexMech extends SubsystemBase{
     private ArrayList<String> nameList = new ArrayList<String>();
 
     private MotorType[] _motorTypes;
+
+    private LinearQuadraticRegulator lqr;
 
     public FlexMech(int[] motorIDs, MotorType[] motorTypes) {
         _motorTypes = motorTypes;
@@ -108,8 +113,8 @@ public class FlexMech extends SubsystemBase{
 
         private MotorType _motorType;
 
-        public FlexMotor(String s, int i, MotorType motorType) {
-            super(s, i);
+        public FlexMotor(int i, MotorType motorType) {
+            super("Flex Controller", i);
 
             setMotorType(motorType);
         }
