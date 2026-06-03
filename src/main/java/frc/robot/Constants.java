@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -15,5 +21,14 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+  public static class VisionConstants {
+    public static final double jumpTolerance = 0.5; // in meters
+    public static final Translation3d cameraOffset = new Translation3d();
+    public static final Rotation3d cameraRotation = new Rotation3d();
+    public static final Transform3d robotToCam = new Transform3d();
+    public static final List<Integer> bannedTags = List.of(1, 6, 7, 12, 13, 14, 15, 16, 17, 22, 23, 28, 29, 30, 31, 32); 
+    public static final Transform3d camToRobot = robotToCam.inverse();
+    public static final boolean usePhotonVision = false;
   }
 }
