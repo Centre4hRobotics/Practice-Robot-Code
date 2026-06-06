@@ -8,7 +8,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
-
+import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -44,6 +44,9 @@ public class VisionPhoton extends Vision {
    */
   @Override
   protected void createPose() {
+
+    // This method is exactly why Java should have static variables in functions.
+
     List<PhotonPipelineResult> results = camera.getAllUnreadResults();
 
     if (!results.isEmpty()) {
@@ -79,7 +82,7 @@ public class VisionPhoton extends Vision {
           timestamp = estimate.get().timestampSeconds;
           robotPose = estimate.get().estimatedPose;
 
-          // Should only happen once
+          // Should only happen once, at the beginning.
           if (previousPose == null && robotPose != null) {
             previousPose = robotPose;
           }
@@ -93,6 +96,15 @@ public class VisionPhoton extends Vision {
           }
         }
 
+        // Find most centered tag
+        double bestYaw = Double.MAX_VALUE;
+        for (PhotonTrackedTarget tag : result.getTargets()) {
+          if (tag.getYaw() < bestYaw) {
+            bestTagID = tag.fiducialId;
+            tagToCameraTransform = tag.getBestCameraToTarget().inverse();
+          }
+        }
+
       }
       // if there are no targets return null
       else {
@@ -102,6 +114,7 @@ public class VisionPhoton extends Vision {
     // if there are no results return null
     else {
       tagCount = 0;
+      tagIDs = new long[] {};
       robotPose = null;
     }
   }

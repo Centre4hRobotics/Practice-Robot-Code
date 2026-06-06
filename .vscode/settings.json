@@ -62,5 +62,9 @@
   "java.dependency.enableDependencyCheckup": false,
   "editor.formatOnSave": true,
   "java.format.settings.url": "eclipse-java-google-style.xml",
-  "files.trimTrailingWhitespace": true
+  "files.trimTrailingWhitespace": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
 }

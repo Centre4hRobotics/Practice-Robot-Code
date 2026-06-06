@@ -1,62 +1,66 @@
 package frc.robot.subsystems;
 
-import java.time.Instant;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.IntegerSubscriber;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.networktables.IntegerArraySubscriber;
+import edu.wpi.first.networktables.TimestampedDoubleArray;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionCoprocessor extends Vision {
-
-  private DoubleArraySubscriber cameraGlobalPose; // "Global Pose" [x, y, yaw]
-  // private DoubleArraySubscriber tagToCameraPose; // "Tag To Camera Pose" [x, y, yaw]
-  private IntegerSubscriber visibleTags; // "AprilTag Count"
-  private DoubleSubscriber robotPoseTimestamp;// "Global Pose Timestamp"
+  // "Global Pose" [x, y, z, roll, pitch, yaw]
+  private DoubleArraySubscriber cameraGlobalPoseSubscriber;
+  // "Tag To Camera Pose" [x, y, z, roll, pitch, yaw]
+  private DoubleArraySubscriber tagToCameraTransformSubscriber;
+  private IntegerArraySubscriber visibleTagsSubscriber;
 
   public VisionCoprocessor() {
-    cameraGlobalPose =
-        visionTable.getDoubleArrayTopic("Global Pose").subscribe(new double[] {0, 0, 0});
-    // tagToCameraPose = visionTable.getDoubleArrayTopic("Tag To Camera Pose").subscribe(new
-    // double[] {0, 0, 0});
+    cameraGlobalPoseSubscriber =
+        visionTable.getDoubleArrayTopic("Global Pose").subscribe(new double[] {0, 0, 0, 0, 0, 0});
+    cameraGlobalPoseSubscriber = visionTable.getDoubleArrayTopic("Tag To Camera Pose")
+        .subscribe(new double[] {0, 0, 0, 0, 0, 0});
 
-    visibleTags = visionTable.getIntegerTopic("AprilTag Count").subscribe(0);
-
-    robotPoseTimestamp = visionTable.getDoubleTopic("Global Pose Timestamp").subscribe(0.0);
-
-    // Calibrate Unix to FPGA time offset (NS)
-    // Note: the Java epoch is the same as the Unix epoch
-    Instant nowInstant = Instant.now();
-    long nowFpgaNs = RobotController.getFPGATime() * 1_000L;
-
-    long nowUnixNs = nowInstant.getEpochSecond() * 1_000_000_000L + nowInstant.getNano();
-
-    visionTable.getEntry("FPGA Offset").setValue(nowUnixNs - nowFpgaNs);
+    visibleTagsSubscriber = visionTable.getIntegerArrayTopic("AprilTags").subscribe(new long[] {});
   }
 
+  /**
+   * Create pose estimates from Coprocessor data
+   */
   @Override
   protected void createPose() {
-    tagCount = visibleTags.get();
+
+    tagIDs = visibleTagsSubscriber.get();
+    tagCount = tagIDs.length;
 
     confident = tagCount > 1;
-    // isConfident = true;
 
     robotPose = null;
+    tagToCameraTransform = null;
 
     if (confident) {
 
-      double[] pose = cameraGlobalPose.get(); // [x, y, theta]
+      // Get data from network tables (including timestamp)
+      TimestampedDoubleArray data = cameraGlobalPoseSubscriber.getAtomic();
 
-      timestamp = robotPoseTimestamp.get();
-      Pose3d cameraPose = new Pose3d(new Translation3d(pose[0], pose[1], pose[2]),
-          new Rotation3d(pose[3], pose[4], pose[5]));
+      // [0: x, 1: y, 2: z, 3: roll, 4: pitch, 5: yaw]
+      double[] poseData = data.value;
+      timestamp = data.timestamp;
+
+      Pose3d cameraPose = new Pose3d(new Translation3d(poseData[0], poseData[1], poseData[2]),
+          new Rotation3d(poseData[3], poseData[4], poseData[5]));
 
       robotPose = cameraPose.transformBy(VisionConstants.camToRobot);
 
+    }
+
+    if (tagCount > 0) {
+      // [0: x, 1: y, 2: z, 3: roll, 4: pitch, 5: yaw]
+      double[] transformData = tagToCameraTransformSubscriber.get();
+      tagToCameraTransform =
+          new Transform3d(new Translation3d(transformData[0], transformData[1], transformData[2]),
+              new Rotation3d(transformData[3], transformData[4], transformData[5]));
     }
   }
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
@@ -9,11 +10,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Vision extends SubsystemBase {
 
-  protected Pose3d robotPose;
-  protected long tagCount;
-  protected boolean confident;
-  protected double timestamp;
-  protected long[] tagIDs;
+  protected Pose3d robotPose = new Pose3d();
+  protected long tagCount = 0;
+  protected boolean confident = false;
+  protected double timestamp = -1;
+  protected long[] tagIDs = new long[] {};
+
+  protected long bestTagID = 0;
+  protected Transform3d tagToCameraTransform = new Transform3d();
 
   protected NetworkTable visionTable;
   protected StructPublisher<Pose2d> fusedPosePublisher;
@@ -32,26 +36,44 @@ public abstract class Vision extends SubsystemBase {
     return tagCount;
   }
 
+  /**
+   * @return An array of all detected tag's IDs.
+   */
   public long[] getTagIDs() {
     return tagIDs;
   }
 
   /**
-   * @return Whether the camera is confident about its pose
+   * @return Whether the camera is confident about its pose.
    */
   public boolean isConfident() {
     return confident;
   }
 
   /**
-   * @return When the camera saw the tags, in FPGA time
+   * @return When the camera saw the tag(s), in FPGA time.
    */
   public double getTimestamp() {
     return timestamp;
   }
 
   /**
-   * Calculate the actual pose.
+   * @return Get the most centered tag's ID.
+   */
+  public long getCenteredTag() {
+    return bestTagID;
+  }
+
+  /**
+   * @return Get the transform from the most centered tag to the camera.
+   * @see #getCenteredTag()
+   */
+  public Transform3d getTagToCamera() {
+    return tagToCameraTransform;
+  }
+
+  /**
+   * Calculate the actual pose. MUST be implemented by subclasses.
    */
   abstract protected void createPose();
 
