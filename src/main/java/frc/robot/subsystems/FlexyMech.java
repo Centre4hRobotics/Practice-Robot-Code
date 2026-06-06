@@ -1,4 +1,4 @@
-//Taliesin Halferty -- May 16th 2026
+// Taliesin Halferty -- May 16th 2026
 
 package frc.robot.subsystems;
 
@@ -25,18 +25,18 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public abstract class FlexyMech extends SubsystemBase{
+public abstract class FlexyMech extends SubsystemBase {
 
     private TriMap<Integer, String, FlexyBrushlessController> map = new TriMap<>();
-    
+
     public FlexyMech(int[] ids, MotorType[] types) {
 
         MotorType motorType = MotorType.TALON;
         FlexyBrushlessController controller;
 
-        for(int i = 0; i<ids.length; i++) {
+        for (int i = 0; i < ids.length; i++) {
             motorType = MotorType.TALON;
-            if(i<types.length)
+            if (i < types.length)
                 motorType = types[i];
             controller = new FlexyBrushlessController(ids[i], motorType);
             map.put(ids[i], "Motor " + ids[i] + ": " + motorType.name(), controller);
@@ -44,10 +44,10 @@ public abstract class FlexyMech extends SubsystemBase{
     }
 
     public void setNameList(String[] names, int[] ids) {
-        if(names.length!=ids.length)
+        if (names.length != ids.length)
             return;
         FlexyBrushlessController temp;
-        for(int i = 0; i<ids.length; i++) {
+        for (int i = 0; i < ids.length; i++) {
             temp = map.getT3FromT1(ids[i]);
             map.removeT1(ids[i]);
             map.put(ids[i], names[i], temp);
@@ -55,7 +55,7 @@ public abstract class FlexyMech extends SubsystemBase{
     }
 
     protected void configure(int id, TalonFXConfiguration talonConfig, SparkMaxConfig sparkConfig) {
-        if(map.contains(id)) {
+        if (map.contains(id)) {
             switch (map.getT3FromT1(id).getType()) {
                 case SPARK:
                     map.getT3FromT1(id).config(sparkConfig);
@@ -68,113 +68,116 @@ public abstract class FlexyMech extends SubsystemBase{
         }
     }
 
-    protected void configure(int[] ids, TalonFXConfiguration talonConfig, SparkMaxConfig sparkConfig) {
-        for(int id : ids)
+    protected void configure(int[] ids, TalonFXConfiguration talonConfig,
+            SparkMaxConfig sparkConfig) {
+        for (int id : ids)
             configure(id, talonConfig, sparkConfig);
     }
 
-    protected void configure(String name, TalonFXConfiguration talonConfig, SparkMaxConfig sparkConfig) {
-        if(map.contains(name))
+    protected void configure(String name, TalonFXConfiguration talonConfig,
+            SparkMaxConfig sparkConfig) {
+        if (map.contains(name))
             configure(map.getT1FromT2(name), talonConfig, sparkConfig);
     }
 
-    protected void configure(String[] names, TalonFXConfiguration talonConfig, SparkMaxConfig sparkConfig) {
-        for(String name : names)
+    protected void configure(String[] names, TalonFXConfiguration talonConfig,
+            SparkMaxConfig sparkConfig) {
+        for (String name : names)
             configure(name, talonConfig, sparkConfig);
     }
 
     protected void invert(int id, boolean inverted) {
-        if(map.contains(id))
+        if (map.contains(id))
             map.getT3FromT1(id).setInverted(inverted);
     }
 
     protected void invert(int[] ids, boolean inverted) {
-        for(int id : ids)
+        for (int id : ids)
             invert(id, inverted);
     }
 
     protected void invert(String name, boolean inverted) {
-        if(map.contains(name))
+        if (map.contains(name))
             invert(map.getT1FromT2(name), inverted);
     }
 
     protected void invert(String[] names, boolean inverted) {
-        for(String name : names)
+        for (String name : names)
             invert(name, inverted);
     }
 
     protected void makeFollowers(int followerId, int leaderId, boolean alignment) {
-        if(map.contains(followerId)&&map.contains(leaderId))
+        if (map.contains(followerId) && map.contains(leaderId))
             map.getT3FromT1(followerId).makeFollower(map.getT3FromT1(leaderId), alignment);
     }
 
     protected void makeFollowers(String followerName, String leaderName, boolean alignment) {
-        if(map.contains(followerName)&&map.contains(leaderName))
+        if (map.contains(followerName) && map.contains(leaderName))
             makeFollowers(map.getT1FromT2(followerName), map.getT1FromT2(leaderName), alignment);
     }
 
     public void spin(int id, Voltage volts) {
-        if(map.contains(id))
+        if (map.contains(id))
             map.getT3FromT1(id).spin(volts);
     }
 
     public void spin(int[] ids, Voltage volts) {
-        for(int id : ids)
+        for (int id : ids)
             spin(id, volts);
     }
 
     public void spin(String name, Voltage volts) {
-        if(map.contains(name))
+        if (map.contains(name))
             spin(map.getT1FromT2(name), volts);
     }
 
     public void spin(String[] names, Voltage volts) {
-        for(String name : names)
+        for (String name : names)
             spin(name, volts);
     }
 
     public void spin(int id, AngularVelocity rps) {
-        if(map.contains(id))
+        if (map.contains(id))
             map.getT3FromT1(id).spin(rps);
     }
 
     public void spin(int[] ids, AngularVelocity rps) {
-        for(int id : ids)
+        for (int id : ids)
             spin(id, rps);
     }
 
     public void spin(String name, AngularVelocity rps) {
-        if(map.contains(name))
+        if (map.contains(name))
             spin(map.getT1FromT2(name), rps);
     }
 
     public void spin(String[] names, AngularVelocity rps) {
-        for(String name : names)
+        for (String name : names)
             spin(name, rps);
     }
 
     public void spin(int id, Angle angle) {
-        if(map.contains(id))
+        if (map.contains(id))
             map.getT3FromT1(id).spin(angle);
     }
 
     public void spin(int[] ids, Angle angle) {
-        for(int id : ids)
+        for (int id : ids)
             spin(id, angle);
     }
 
     public void spin(String name, Angle angle) {
-        if(map.contains(name))
+        if (map.contains(name))
             spin(map.getT1FromT2(name), angle);
     }
 
     public void spin(String[] names, Angle angle) {
-        for(String name : names)
+        for (String name : names)
             spin(name, angle);
     }
 
     public class FlexyBrushlessController {
-        
+
         private TalonFX _talon;
         private TalonFXConfiguration _talonConfig;
 
@@ -187,26 +190,28 @@ public abstract class FlexyMech extends SubsystemBase{
             _type = type;
             switch (_type) {
                 case SPARK:
-                    _spark = new SparkMax(id, com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
+                    _spark = new SparkMax(id,
+                            com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless);
                     break;
                 case TALON:
                 default:
-                    _talon = new TalonFX(id); 
+                    _talon = new TalonFX(id);
                     break;
             }
         }
 
         public void config(TalonFXConfiguration config) {
-            if(_type == MotorType.TALON) {
+            if (_type == MotorType.TALON) {
                 _talonConfig = config;
                 _talon.getConfigurator().apply(_talonConfig);
             }
         }
 
         public void config(SparkMaxConfig config) {
-            if(_type == MotorType.SPARK) {
+            if (_type == MotorType.SPARK) {
                 _sparkConfig = config;
-                _spark.configure(_sparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                _spark.configure(_sparkConfig, ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
             }
         }
 
@@ -214,11 +219,12 @@ public abstract class FlexyMech extends SubsystemBase{
             switch (_type) {
                 case SPARK:
                     _sparkConfig.inverted(inverted);
-                    _spark.configure(_sparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                    _spark.configure(_sparkConfig, ResetMode.kResetSafeParameters,
+                            PersistMode.kPersistParameters);
                     break;
                 case TALON:
                 default:
-                    if(inverted)
+                    if (inverted)
                         _talonConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
                     else
                         _talonConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -228,19 +234,20 @@ public abstract class FlexyMech extends SubsystemBase{
         }
 
         public void makeFollower(TalonFX other, MotorAlignmentValue alignment) {
-            if(_type == MotorType.TALON)
+            if (_type == MotorType.TALON)
                 _talon.setControl(new Follower(other.getDeviceID(), alignment));
         }
 
         public void makeFollower(SparkMax other, boolean alignment) {
-            if(_type == MotorType.SPARK) {
+            if (_type == MotorType.SPARK) {
                 _sparkConfig.follow(other, alignment);
-                _spark.configure(_sparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                _spark.configure(_sparkConfig, ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
             }
         }
 
         public void makeFollower(FlexyBrushlessController other, boolean alignment) {
-            if(_type == other.getType()) {
+            if (_type == other.getType()) {
                 switch (_type) {
                     case SPARK:
                         makeFollower(other.getSparkMax(), alignment);
@@ -248,7 +255,7 @@ public abstract class FlexyMech extends SubsystemBase{
                     case TALON:
                     default:
                         MotorAlignmentValue alignmentValue = MotorAlignmentValue.Opposed;
-                        if(alignment)
+                        if (alignment)
                             alignmentValue = MotorAlignmentValue.Aligned;
                         makeFollower(other.getTalon(), alignmentValue);
                         break;
@@ -271,7 +278,8 @@ public abstract class FlexyMech extends SubsystemBase{
         public void spin(AngularVelocity rps) {
             switch (_type) {
                 case SPARK:
-                    _spark.getClosedLoopController().setSetpoint(rps.in(Units.RPM), ControlType.kVelocity);
+                    _spark.getClosedLoopController().setSetpoint(rps.in(Units.RPM),
+                            ControlType.kVelocity);
                     break;
                 case TALON:
                 default:
@@ -281,9 +289,10 @@ public abstract class FlexyMech extends SubsystemBase{
         }
 
         public void spin(Angle angle) {
-            switch(_type) {
+            switch (_type) {
                 case SPARK:
-                    _spark.getClosedLoopController().setSetpoint(angle.abs(Revolutions), ControlType.kPosition);
+                    _spark.getClosedLoopController().setSetpoint(angle.abs(Revolutions),
+                            ControlType.kPosition);
                     break;
                 case TALON:
                 default:
@@ -313,13 +322,13 @@ public abstract class FlexyMech extends SubsystemBase{
         }
 
         public TalonFX getTalon() {
-            if(_type == MotorType.TALON)
+            if (_type == MotorType.TALON)
                 return _talon;
             return null;
         }
 
         public SparkMax getSparkMax() {
-            if(_type == MotorType.SPARK)
+            if (_type == MotorType.SPARK)
                 return _spark;
             return null;
         }
@@ -339,7 +348,9 @@ public abstract class FlexyMech extends SubsystemBase{
         }
     }
 
-    public enum MotorType {SPARK, TALON}
+    public enum MotorType {
+        SPARK, TALON
+    }
 
     public class TriMap<T1, T2, T3> {
         private HashMap<T1, T2> hash12;
@@ -359,7 +370,7 @@ public abstract class FlexyMech extends SubsystemBase{
         }
 
         public boolean contains(Object o) {
-            return hash12.containsKey(o)||hash21.containsKey(o)||hash31.containsKey(o);
+            return hash12.containsKey(o) || hash21.containsKey(o) || hash31.containsKey(o);
         }
 
         public void put(T1 t1, T2 t2, T3 t3) {
