@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
