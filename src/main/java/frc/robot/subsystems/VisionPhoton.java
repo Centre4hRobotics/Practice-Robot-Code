@@ -11,7 +11,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants.VisionConstants;
 
@@ -21,7 +21,7 @@ public class VisionPhoton extends Vision {
   private PhotonPoseEstimator photonEstimator;
   private PhotonCamera camera;
 
-  private Pose3d previousPose;
+  private Pose2d previousPose;
 
   public VisionPhoton() {
 
@@ -80,7 +80,7 @@ public class VisionPhoton extends Vision {
         else {
 
           timestamp = estimate.get().timestampSeconds;
-          robotPose = estimate.get().estimatedPose;
+          robotPose = estimate.get().estimatedPose.toPose2d();
 
           // Should only happen once, at the beginning.
           if (previousPose == null && robotPose != null) {

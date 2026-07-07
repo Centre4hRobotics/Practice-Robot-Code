@@ -6,26 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
-<<<<<<< HEAD
-<<<<<<< HEAD
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveWithJoystick;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.DriveOverseer;
 import frc.robot.subsystems.Vision;
-=======
-=======
->>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
-import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.VisionCoprocessor;
 import frc.robot.subsystems.VisionPhoton;
-<<<<<<< HEAD
->>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
-=======
->>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -38,17 +25,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-<<<<<<< HEAD
-  Vision vision = new Vision();
+  Vision visionSubsystem;
   Chassis chassis;
   DriveOverseer drive;
-=======
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Vision visionSubsystem;
-<<<<<<< HEAD
->>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
-=======
->>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -58,22 +37,22 @@ public class RobotContainer {
   public RobotContainer() {
 
     try {
-      chassis = new Chassis(MotorConstants.driveIDs, MotorConstants.turnIDs, MotorConstants.encoderIDs);
-    }
-    catch (Exception e) {
+      chassis =
+          new Chassis(MotorConstants.driveIDs, MotorConstants.turnIDs, MotorConstants.encoderIDs);
+    } catch (Exception e) {
       e.printStackTrace();
     }
-
-    drive = new DriveOverseer(chassis, vision, 11);
-
-    // Configure the trigger bindings
-    configureBindings();
 
     if (VisionConstants.usePhotonVision) {
       visionSubsystem = new VisionPhoton();
     } else {
       visionSubsystem = new VisionCoprocessor();
     }
+
+    drive = new DriveOverseer(chassis, visionSubsystem, 11);
+
+    // Configure the trigger bindings
+    configureBindings();
   }
 
   /**
@@ -92,7 +71,7 @@ public class RobotContainer {
     // cancelling on release.
 
     drive.setDefaultCommand(new DriveWithJoystick(drive, m_driverController));
-    
+
   }
 
   /**

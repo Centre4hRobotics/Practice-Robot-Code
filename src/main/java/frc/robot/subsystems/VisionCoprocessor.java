@@ -51,7 +51,7 @@ public class VisionCoprocessor extends Vision {
       Pose3d cameraPose = new Pose3d(new Translation3d(poseData[0], poseData[1], poseData[2]),
           new Rotation3d(poseData[3], poseData[4], poseData[5]));
 
-      robotPose = cameraPose.transformBy(VisionConstants.camToRobot);
+      robotPose = cameraPose.transformBy(VisionConstants.camToRobot).toPose2d();
 
     }
 
