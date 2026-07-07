@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static edu.wpi.first.units.Units.Amps;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -68,6 +69,8 @@ public class KrakenSwerveModule extends SwerveModuleBase{
     }
 
 =======
+=======
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -275,5 +278,8 @@ public class KrakenSwerveModule extends SwerveModuleBase {
     double wheelMeters = wheelRotations * (circumference * 25.4 / 1000.0);
     return wheelMeters;
   }
+<<<<<<< HEAD
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
+=======
 >>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 }

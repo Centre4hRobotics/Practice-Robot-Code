@@ -43,7 +43,7 @@ public class VisionPhoton extends Vision {
    * Get the pose from PhotonVision
    */
   @Override
-  protected void createPose() {
+  public void createPose() {
 
     // This method is exactly why Java should have static variables in functions.
 

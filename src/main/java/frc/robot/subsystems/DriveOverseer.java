@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.Optional;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -61,6 +62,11 @@ public class DriveOverseer extends SubsystemBase{
 
         posePub.set(getPose());
     }
+=======
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class DriveOverseer extends SubsystemBase {
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 =======
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
@@ -85,6 +86,11 @@ public class Chassis extends SubsystemBase{
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
+=======
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Chassis extends SubsystemBase {
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 =======
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 

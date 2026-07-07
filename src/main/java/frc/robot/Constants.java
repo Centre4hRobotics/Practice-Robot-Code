@@ -5,6 +5,7 @@
 package frc.robot;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
@@ -15,6 +16,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 =======
+=======
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 import java.util.List;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.controller.PIDController;
@@ -25,6 +28,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.KrakenSwerveModule;
+<<<<<<< HEAD
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
+=======
 >>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 
 /**
@@ -280,6 +286,7 @@ public final class Constants {
     // new ReplanningConfig(true, true) // can add thresholds for both values, see PPLib Java API
     // for info
     // );
+<<<<<<< HEAD
   }
 
   public static class MotorConstants {
@@ -318,5 +325,7 @@ public final class Constants {
 
   public static class VisionConstants {
     public static final Transform3d robotToCam = new Transform3d(.23, -.01, .3556, new Rotation3d(0,0, 0)); 
+=======
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
   }
 }

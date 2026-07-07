@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
@@ -96,6 +97,8 @@ public abstract class SwerveModuleBase extends FlexyMech{
     }
 
 =======
+=======
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -331,5 +334,8 @@ abstract public class SwerveModuleBase {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     return nt.getTable("SwerveModule").getEntry("Module " + _name + " " + logName);
   }
+<<<<<<< HEAD
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
+=======
 >>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 }

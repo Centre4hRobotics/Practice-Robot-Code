@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +20,8 @@ public class Vision extends SubsystemBase{
     }
 
 =======
+=======
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -118,5 +121,8 @@ public abstract class Vision extends SubsystemBase {
       fusedPosePublisher.set(robotPose.toPose2d());
     }
   }
+<<<<<<< HEAD
+>>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
+=======
 >>>>>>> 05d414eca19921682caf248b2a2536729e2d60d1
 }

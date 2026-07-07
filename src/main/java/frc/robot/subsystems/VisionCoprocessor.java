@@ -29,7 +29,7 @@ public class VisionCoprocessor extends Vision {
    * Create pose estimates from Coprocessor data
    */
   @Override
-  protected void createPose() {
+  public void createPose() {
 
     tagIDs = visibleTagsSubscriber.get();
     tagCount = tagIDs.length;
