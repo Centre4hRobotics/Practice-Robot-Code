@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -7,22 +7,25 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.VisionConstants.Camera;
 
-public class VisionCoprocessor extends Vision {
+public class CameraCoprocessor extends CameraBase {
   // "Global Pose" [x, y, z, roll, pitch, yaw]
   private DoubleArraySubscriber cameraGlobalPoseSubscriber;
   // "Tag To Camera Pose" [x, y, z, roll, pitch, yaw]
   private DoubleArraySubscriber tagToCameraTransformSubscriber;
   private IntegerArraySubscriber visibleTagsSubscriber;
+  private Transform3d camToRobot;
 
-  public VisionCoprocessor() {
+  public CameraCoprocessor(Camera cam) {
     cameraGlobalPoseSubscriber =
         visionTable.getDoubleArrayTopic("Global Pose").subscribe(new double[] {0, 0, 0, 0, 0, 0});
     cameraGlobalPoseSubscriber = visionTable.getDoubleArrayTopic("Tag To Camera Pose")
         .subscribe(new double[] {0, 0, 0, 0, 0, 0});
 
     visibleTagsSubscriber = visionTable.getIntegerArrayTopic("AprilTags").subscribe(new long[] {});
+
+    camToRobot = cam.robotToCam.inverse();
   }
 
   /**
@@ -37,7 +40,7 @@ public class VisionCoprocessor extends Vision {
     confident = tagCount > 1;
 
     robotPose = null;
-    tagToCameraTransform = null;
+    cameraToTagTransform = null;
 
     if (confident) {
 
@@ -51,14 +54,14 @@ public class VisionCoprocessor extends Vision {
       Pose3d cameraPose = new Pose3d(new Translation3d(poseData[0], poseData[1], poseData[2]),
           new Rotation3d(poseData[3], poseData[4], poseData[5]));
 
-      robotPose = cameraPose.transformBy(VisionConstants.camToRobot).toPose2d();
+      robotPose = cameraPose.transformBy(camToRobot);
 
     }
 
     if (tagCount > 0) {
       // [0: x, 1: y, 2: z, 3: roll, 4: pitch, 5: yaw]
       double[] transformData = tagToCameraTransformSubscriber.get();
-      tagToCameraTransform =
+      cameraToTagTransform =
           new Transform3d(new Translation3d(transformData[0], transformData[1], transformData[2]),
               new Rotation3d(transformData[3], transformData[4], transformData[5]));
     }

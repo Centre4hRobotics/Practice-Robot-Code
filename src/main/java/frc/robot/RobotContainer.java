@@ -10,9 +10,11 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveWithJoystick;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.DriveOverseer;
-import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.VisionCoprocessor;
-import frc.robot.subsystems.VisionPhoton;
+import frc.robot.subsystems.Vision.CameraPhoton;
+import frc.robot.subsystems.Vision.CameraCoprocessor;
+import frc.robot.subsystems.Vision.CameraBase;
+import java.util.ArrayList;
+import java.util.List;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  Vision visionSubsystem;
+  List<CameraBase> cameras = new ArrayList<>();
   Chassis chassis;
   DriveOverseer drive;
 
@@ -43,13 +45,18 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    if (VisionConstants.usePhotonVision) {
-      visionSubsystem = new VisionPhoton();
-    } else {
-      visionSubsystem = new VisionCoprocessor();
+    for (VisionConstants.Camera cam : VisionConstants.cameras) {
+      switch (VisionConstants.visionType) {
+        case PHOTONVISION:
+          cameras.add(new CameraPhoton(cam));
+          break;
+        case COPROCESSOR:
+          cameras.add(new CameraCoprocessor(cam));
+          break;
+      }
     }
 
-    drive = new DriveOverseer(chassis, visionSubsystem, 11);
+    drive = new DriveOverseer(chassis, cameras, 11);
 
     // Configure the trigger bindings
     configureBindings();

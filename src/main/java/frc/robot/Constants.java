@@ -67,13 +67,24 @@ public final class Constants {
 
   public static class VisionConstants {
 
-    public static final boolean usePhotonVision = true;
+    public static enum VisionType {
+      COPROCESSOR, PHOTONVISION
+    }
+
+    public static class Camera {
+      public final Transform3d robotToCam;
+
+      public Camera(Transform3d robotToCam) {
+        this.robotToCam = robotToCam;
+      }
+    }
+
+    public static final Camera[] cameras =
+        new Camera[] {new Camera(new Transform3d(0.23, -0.01, 0.3556, new Rotation3d()))};
+
+    public static final VisionType visionType = VisionType.PHOTONVISION;
 
     public static final double jumpTolerance = .2;
-
-    public static final Transform3d robotToCam =
-        new Transform3d(.23, -.01, .3556, new Rotation3d(0, 0, 0));
-    public static final Transform3d camToRobot = robotToCam.inverse();
 
     public static final List<Integer> bannedTags = null;
   }

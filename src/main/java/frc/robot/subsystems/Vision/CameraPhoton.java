@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Vision;
 
 import java.io.File;
 import java.util.List;
@@ -11,19 +11,20 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.VisionConstants.Camera;
 
-public class VisionPhoton extends Vision {
+public class CameraPhoton extends CameraBase {
 
   // PhotonVision
   private PhotonPoseEstimator photonEstimator;
   private PhotonCamera camera;
 
-  private Pose2d previousPose;
+  private Pose3d previousPose;
 
-  public VisionPhoton() {
+  public CameraPhoton(Camera cam) {
 
     AprilTagFieldLayout noTrenchTagLayout;
 
@@ -35,7 +36,7 @@ public class VisionPhoton extends Vision {
       noTrenchTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
     }
 
-    photonEstimator = new PhotonPoseEstimator(noTrenchTagLayout, VisionConstants.robotToCam);
+    photonEstimator = new PhotonPoseEstimator(noTrenchTagLayout, cam.robotToCam);
     camera = new PhotonCamera("PhotonCamera");
   }
 
@@ -59,6 +60,8 @@ public class VisionPhoton extends Vision {
           .filter(x -> VisionConstants.bannedTags.contains(x.fiducialId)).count();
       tagCount -= banned;
 
+      confident = tagCount >= 2;
+
       if (result.hasTargets()) {
         // grab an estimate using the tags (returns null if no estimate)
         // remember to set photonvision to 3d mode
@@ -80,7 +83,7 @@ public class VisionPhoton extends Vision {
         else {
 
           timestamp = estimate.get().timestampSeconds;
-          robotPose = estimate.get().estimatedPose.toPose2d();
+          robotPose = estimate.get().estimatedPose;
 
           // Should only happen once, at the beginning.
           if (previousPose == null && robotPose != null) {
@@ -101,7 +104,7 @@ public class VisionPhoton extends Vision {
         for (PhotonTrackedTarget tag : result.getTargets()) {
           if (tag.getYaw() < bestYaw) {
             bestTagID = tag.fiducialId;
-            tagToCameraTransform = tag.getBestCameraToTarget().inverse();
+            cameraToTagTransform = tag.getBestCameraToTarget();
           }
         }
 

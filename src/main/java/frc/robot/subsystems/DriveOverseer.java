@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.List;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -12,11 +13,12 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.subsystems.Vision.CameraBase;
 
 public class DriveOverseer extends SubsystemBase {
 
     private Chassis chassis;
-    private Vision vision;
+    private List<CameraBase> cameras;
 
     private Pigeon2 gyro;
 
@@ -24,10 +26,10 @@ public class DriveOverseer extends SubsystemBase {
 
     private StructPublisher<Pose2d> posePub;
 
-    public DriveOverseer(Chassis chassis, Vision vision, int gyroID) {
+    public DriveOverseer(Chassis chassis, List<CameraBase> cameras, int gyroID) {
 
         this.chassis = chassis;
-        this.vision = vision;
+        this.cameras = cameras;
 
         gyro = new Pigeon2(gyroID);
 
@@ -56,9 +58,11 @@ public class DriveOverseer extends SubsystemBase {
 
         poseEstimator.update(gyro.getRotation2d(), chassis.getModulePositions());
 
-        Pose2d visionPose = vision.getPose();
-        if (visionPose != null)
-            poseEstimator.addVisionMeasurement(visionPose, vision.getTimeStamp());
+        for (CameraBase cam : cameras) {
+            Pose2d visionPose = cam.getRobotPose2d();
+            if (visionPose != null)
+                poseEstimator.addVisionMeasurement(visionPose, cam.getTimestamp());
+        }
 
         posePub.set(getPose());
     }
