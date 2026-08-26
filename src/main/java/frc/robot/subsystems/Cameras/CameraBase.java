@@ -1,7 +1,6 @@
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.Cameras;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -14,7 +13,7 @@ import edu.wpi.first.networktables.StructPublisher;
  * Subclasses must set `robotPose`, `tagCount`, `tagIDs`, `confident`, `timestamp`, `bestTagID`, and
  * `cameraToTagTransform`
  */
-public abstract class CameraBase extends SubsystemBase {
+public abstract class CameraBase {
 
   protected Pose3d robotPose = new Pose3d();
   protected long tagCount = 0;
@@ -25,11 +24,12 @@ public abstract class CameraBase extends SubsystemBase {
   protected long bestTagID = 0;
   protected Transform3d cameraToTagTransform = new Transform3d();
 
-  protected NetworkTable visionTable;
+  protected static NetworkTable visionTable;
   protected DoublePublisher globalPoseXPublisher;
   protected DoublePublisher globalPoseYPublisher;
   protected DoublePublisher globalPoseThetaPublisher;
   protected StructPublisher<Pose2d> fusedPosePublisher;
+  protected double deviation;
 
   /**
    * @return The absolute pose of the robot on the field in 3D
@@ -93,8 +93,9 @@ public abstract class CameraBase extends SubsystemBase {
    */
   abstract protected void createPose();
 
-  public CameraBase() {
-    visionTable = NetworkTableInstance.getDefault().getTable("AprilTag Vision");
+  public CameraBase(int index) {
+    visionTable = NetworkTableInstance.getDefault().getTable("AprilTag Vision")
+        .getSubTable("camera" + Integer.toString(index));
 
     fusedPosePublisher = visionTable.getStructTopic("Fused Pose", Pose2d.struct).publish();
     globalPoseXPublisher = visionTable.getDoubleTopic("Pose X").publish();
@@ -102,10 +103,8 @@ public abstract class CameraBase extends SubsystemBase {
     globalPoseThetaPublisher = visionTable.getDoubleTopic("Pose Theta").publish();
   }
 
-  @Override
-  public void periodic() {
+  public void update() {
     createPose();
-
     if (robotPose != null) {
       globalPoseXPublisher.set(robotPose.getX());
       globalPoseYPublisher.set(robotPose.getY());

@@ -6,15 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveWithJoystick;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.DriveOverseer;
-import frc.robot.subsystems.Vision.CameraPhoton;
-import frc.robot.subsystems.Vision.CameraCoprocessor;
-import frc.robot.subsystems.Vision.CameraBase;
-import java.util.ArrayList;
-import java.util.List;
+import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  List<CameraBase> cameras = new ArrayList<>();
+  Vision vision;
   Chassis chassis;
   DriveOverseer drive;
 
@@ -45,18 +40,9 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    for (VisionConstants.Camera cam : VisionConstants.cameras) {
-      switch (VisionConstants.visionType) {
-        case PHOTONVISION:
-          cameras.add(new CameraPhoton(cam));
-          break;
-        case COPROCESSOR:
-          cameras.add(new CameraCoprocessor(cam));
-          break;
-      }
-    }
+    vision = new Vision();
 
-    drive = new DriveOverseer(chassis, cameras, 11);
+    drive = new DriveOverseer(chassis, vision, 11);
 
     // Configure the trigger bindings
     configureBindings();

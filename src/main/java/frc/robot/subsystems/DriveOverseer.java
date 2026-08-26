@@ -13,12 +13,12 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
-import frc.robot.subsystems.Vision.CameraBase;
+import frc.robot.subsystems.Cameras.CameraBase;
 
 public class DriveOverseer extends SubsystemBase {
 
     private Chassis chassis;
-    private List<CameraBase> cameras;
+    private Vision vision;
 
     private Pigeon2 gyro;
 
@@ -26,10 +26,10 @@ public class DriveOverseer extends SubsystemBase {
 
     private StructPublisher<Pose2d> posePub;
 
-    public DriveOverseer(Chassis chassis, List<CameraBase> cameras, int gyroID) {
+    public DriveOverseer(Chassis chassis, Vision vision, int gyroID) {
 
         this.chassis = chassis;
-        this.cameras = cameras;
+        this.vision = vision;
 
         gyro = new Pigeon2(gyroID);
 
@@ -58,11 +58,7 @@ public class DriveOverseer extends SubsystemBase {
 
         poseEstimator.update(gyro.getRotation2d(), chassis.getModulePositions());
 
-        for (CameraBase cam : cameras) {
-            Pose2d visionPose = cam.getRobotPose2d();
-            if (visionPose != null)
-                poseEstimator.addVisionMeasurement(visionPose, cam.getTimestamp());
-        }
+        vision.update(poseEstimator);
 
         posePub.set(getPose());
     }

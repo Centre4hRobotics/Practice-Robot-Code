@@ -72,20 +72,29 @@ public final class Constants {
     }
 
     public static class Camera {
+      public final VisionType visionType;
       public final Transform3d robotToCam;
+      public final int index;
 
-      public Camera(Transform3d robotToCam) {
+      public Camera(int index, VisionType visionType) {
+        this.index = index;
+        this.visionType = visionType;
+        this.robotToCam = new Transform3d();
+      }
+
+      public Camera(int index, VisionType visionType, Transform3d robotToCam) {
+        this.index = index;
+        this.visionType = visionType;
         this.robotToCam = robotToCam;
       }
     }
 
-    public static final Camera[] cameras =
-        new Camera[] {new Camera(new Transform3d(0.23, -0.01, 0.3556, new Rotation3d()))};
-
-    public static final VisionType visionType = VisionType.PHOTONVISION;
+    public static final Camera[] cameras = new Camera[] {new Camera(0, VisionType.PHOTONVISION,
+        new Transform3d(0.23, -0.01, 0.3556, new Rotation3d()))};
 
     public static final double jumpTolerance = .2;
 
     public static final List<Integer> bannedTags = null;
+
   }
 }

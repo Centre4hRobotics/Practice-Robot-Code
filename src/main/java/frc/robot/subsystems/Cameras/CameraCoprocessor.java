@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.Cameras;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -18,6 +18,8 @@ public class CameraCoprocessor extends CameraBase {
   private Transform3d camToRobot;
 
   public CameraCoprocessor(Camera cam) {
+    super(cam.index);
+
     cameraGlobalPoseSubscriber =
         visionTable.getDoubleArrayTopic("Global Pose").subscribe(new double[] {0, 0, 0, 0, 0, 0});
     cameraGlobalPoseSubscriber = visionTable.getDoubleArrayTopic("Tag To Camera Pose")

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.Cameras;
 
 import java.io.File;
 import java.util.List;
@@ -26,6 +26,8 @@ public class CameraPhoton extends CameraBase {
 
   public CameraPhoton(Camera cam) {
 
+    super(cam.index);
+
     AprilTagFieldLayout noTrenchTagLayout;
 
     try {
@@ -37,7 +39,7 @@ public class CameraPhoton extends CameraBase {
     }
 
     photonEstimator = new PhotonPoseEstimator(noTrenchTagLayout, cam.robotToCam);
-    camera = new PhotonCamera("PhotonCamera");
+    camera = new PhotonCamera("PhotonCam" + String.valueOf(cam.index));
   }
 
   /**
