@@ -3,7 +3,6 @@ package frc.robot.subsystems.Cameras;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -11,6 +10,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants.VisionConstants;
@@ -78,11 +78,7 @@ public class CameraPhoton extends CameraBase {
         }
 
         // set robotPose to null if there is no new estimate
-        if (estimate.isEmpty()) {
-          robotPose = null;
-        }
-        // otherwise, there is some result; set robotPose to that result
-        else {
+        if (!estimate.isEmpty()) {
 
           timestamp = estimate.get().timestampSeconds;
           robotPose = estimate.get().estimatedPose;
@@ -98,6 +94,29 @@ public class CameraPhoton extends CameraBase {
             robotPose = null;
           } else {
             previousPose = robotPose;
+
+            int numTags = 0;
+            double avgDist = 0;
+            for (var target : result.getTargets()) {
+              var tagPose = photonEstimator.getFieldTags().getTagPose(target.getFiducialId());
+              if (tagPose.isEmpty())
+                continue;
+              numTags++;
+              avgDist += tagPose.get().toPose2d().getTranslation()
+                  .getDistance(robotPose.toPose2d().getTranslation());
+            }
+            if (numTags == 0) {
+              deviation = VisionConstants.SINGLE_TAG_DEVIATIONS;
+            } else {
+              avgDist /= numTags;
+              if (numTags > 1)
+                deviation = VisionConstants.MULTI_TAG_DEVIATIONS;
+              else if (numTags == 1 && avgDist > 4)
+                deviation = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+              else
+                deviation = deviation.times(1 + (avgDist * avgDist / 30.0));
+            }
+
           }
         }
 

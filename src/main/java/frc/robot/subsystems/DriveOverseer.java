@@ -13,7 +13,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
-import frc.robot.subsystems.Cameras.CameraBase;
+import frc.robot.subsystems.Vision.VisionPoseEstimate;
 
 public class DriveOverseer extends SubsystemBase {
 
@@ -58,7 +58,12 @@ public class DriveOverseer extends SubsystemBase {
 
         poseEstimator.update(gyro.getRotation2d(), chassis.getModulePositions());
 
-        vision.update(poseEstimator);
+        List<VisionPoseEstimate> visionEstimates = vision.getPoseEstimates();
+
+        for (VisionPoseEstimate estimate : visionEstimates) {
+            poseEstimator.addVisionMeasurement(estimate.robotPose2d, estimate.timestamp,
+                    estimate.standardDeviations);
+        }
 
         posePub.set(getPose());
     }

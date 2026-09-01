@@ -1,8 +1,11 @@
 package frc.robot.subsystems.Cameras;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -29,7 +32,7 @@ public abstract class CameraBase {
   protected DoublePublisher globalPoseYPublisher;
   protected DoublePublisher globalPoseThetaPublisher;
   protected StructPublisher<Pose2d> fusedPosePublisher;
-  protected double deviation;
+  protected Matrix<N3, N1> deviation;
 
   /**
    * @return The absolute pose of the robot on the field in 3D
@@ -78,6 +81,10 @@ public abstract class CameraBase {
    */
   public long getCenteredTag() {
     return bestTagID;
+  }
+
+  public Matrix<N3, N1> getStandardDeviations() {
+    return deviation;
   }
 
   /**

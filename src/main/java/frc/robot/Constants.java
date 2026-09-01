@@ -5,8 +5,12 @@
 package frc.robot;
 
 import java.util.List;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -95,6 +99,8 @@ public final class Constants {
     public static final double jumpTolerance = .2;
 
     public static final List<Integer> bannedTags = null;
+    public static final Matrix<N3, N1> SINGLE_TAG_DEVIATIONS = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> MULTI_TAG_DEVIATIONS = VecBuilder.fill(0.5, 0.5, 1);
 
   }
 }
